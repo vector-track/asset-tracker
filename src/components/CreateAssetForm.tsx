@@ -1,9 +1,10 @@
 import React from 'react';
 import {Storage} from '../storage/Storage';
-import {Asset} from '../tracking/Asset';
+import Asset from '../tracking/Asset';
 
 type CreateAssetFormProps  = {
   storage?: Storage;
+  syncState?: (this: void) => void;
 };
 
 type CreateAssetFormState = {
@@ -27,6 +28,9 @@ class CreateAssetForm extends React.Component<CreateAssetFormProps, CreateAssetF
     event.preventDefault();
     if (this.props.storage) {
       this.props.storage.writeAsset(Asset.createWithName(this.state.assetName));
+      if (this.props.syncState) {
+        this.props.syncState();
+      }
     }
   }
 

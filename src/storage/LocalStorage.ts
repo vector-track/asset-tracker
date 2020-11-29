@@ -16,8 +16,21 @@ class LocalStorage extends Storage {
     }
   }
 
+  getBuffer(): StorageBuffer {
+    return JSON.parse(window.localStorage.getItem(LOCAL_STORAGE_KEY) ?? '{}')
+  }
+
+  getAllAssetsInternal(): string[] {
+    const assets: string[] = [];
+    const storage : StorageBuffer = this.getBuffer();
+    for (var name in storage) {
+      assets.push(storage[name]);
+    }
+    return assets;
+  }
+
   getAssetInternal(assetName: string): string|null {
-    const storage : StorageBuffer = JSON.parse(window.localStorage.getItem(LOCAL_STORAGE_KEY) ?? '');
+    const storage : StorageBuffer = this.getBuffer();
     const asset = storage[assetName];
     if (asset) {
       return asset;
@@ -27,7 +40,7 @@ class LocalStorage extends Storage {
   }
 
   writeAssetInternal(assetName: string, asset: string) {
-    const storage : StorageBuffer = JSON.parse(window.localStorage.getItem(LOCAL_STORAGE_KEY) ?? '{}');
+    const storage : StorageBuffer = this.getBuffer();
     storage[assetName] = asset;
     window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(storage));
   }
