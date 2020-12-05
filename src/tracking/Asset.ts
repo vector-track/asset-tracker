@@ -17,6 +17,9 @@ function str2ab(str: string): Uint8Array  {
   return bufView;
 }
 
+/* Wrapping class around the core Asset proto. All reads and writes to an asset
+ * should go through this class.
+ */
 class Asset {
   get name(): string { return this.assetStore.name; }
   get children(): string[] { return this.assetStore.children; }
@@ -51,4 +54,4 @@ class Asset {
   private constructor(private assetStore: AssetProto) {}
 }
 
-export default Asset;
+export {Asset};

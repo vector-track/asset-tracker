@@ -4,9 +4,7 @@ import AssetTracker from './components/AssetTracker';
 
 function App() {
   return (
-    <div className="App">
-      <AssetTracker />
-    </div>
+    <AssetTracker />
   );
 }
 

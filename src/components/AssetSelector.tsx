@@ -1,7 +1,6 @@
 
 import React from 'react';
-import {Storage} from '../storage/Storage';
-import Asset from '../tracking/Asset';
+import {Asset} from '../tracking/Asset';
 
 type AssetSelectorProps  = {
   assets: Asset[];
@@ -12,13 +11,9 @@ type AssetSelectorState = {
 };
 
 class AssetSelector extends React.Component<AssetSelectorProps, AssetSelectorState> {
-  constructor(props: AssetSelectorProps) {
-    super(props);
-  }
-
   render() {
     return (
-      <div>
+      <React.Fragment>
         {
           this.props.assets.map((asset: Asset, key) => {
             return (<div key={key} onClick={() => this.props.onSelection && this.props.onSelection(asset)}>
@@ -26,7 +21,7 @@ class AssetSelector extends React.Component<AssetSelectorProps, AssetSelectorSta
                     </div>)
           })
         }
-      </div>
+      </React.Fragment>
     );
   }
 }

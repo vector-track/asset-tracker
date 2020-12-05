@@ -1,5 +1,6 @@
 import {Storage, StorageType, StorageOptions} from './Storage';
-const LOCAL_STORAGE_KEY = "at_storage";
+const ASSET_KEY = "at_storage";
+const ANNOTATION_KEY = "an_storage";
 
 type StorageBuffer = {
   [key:string]: string;
@@ -16,13 +17,17 @@ class LocalStorage extends Storage {
     }
   }
 
-  getBuffer(): StorageBuffer {
-    return JSON.parse(window.localStorage.getItem(LOCAL_STORAGE_KEY) ?? '{}')
+  getAssetBuffer(): StorageBuffer {
+    return JSON.parse(window.localStorage.getItem(ASSET_KEY) ?? '{}')
+  }
+
+  getAnnotationBuffer(): StorageBuffer {
+    return JSON.parse(window.localStorage.getItem(ANNOTATION_KEY) ?? '{}')
   }
 
   getAllAssetsInternal(): string[] {
     const assets: string[] = [];
-    const storage : StorageBuffer = this.getBuffer();
+    const storage : StorageBuffer = this.getAssetBuffer();
     for (var name in storage) {
       assets.push(storage[name]);
     }
@@ -30,7 +35,7 @@ class LocalStorage extends Storage {
   }
 
   getAssetInternal(assetName: string): string|null {
-    const storage : StorageBuffer = this.getBuffer();
+    const storage : StorageBuffer = this.getAssetBuffer();
     const asset = storage[assetName];
     if (asset) {
       return asset;
@@ -40,9 +45,21 @@ class LocalStorage extends Storage {
   }
 
   writeAssetInternal(assetName: string, asset: string) {
-    const storage : StorageBuffer = this.getBuffer();
+    const storage : StorageBuffer = this.getAssetBuffer();
     storage[assetName] = asset;
-    window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(storage));
+    window.localStorage.setItem(ASSET_KEY, JSON.stringify(storage));
+  }
+
+  getAnnotationInternal(assetName: string): string|null {
+    const storage : StorageBuffer = this.getAnnotationBuffer();
+    const annotation = storage[assetName];
+    return annotation ?? null;
+  }
+
+  setAnnotationInternal(assetName: string, freeformText: string) {
+    const storage : StorageBuffer = this.getAnnotationBuffer();
+    storage[assetName] = freeformText;
+    window.localStorage.setItem(ANNOTATION_KEY, JSON.stringify(storage));
   }
 }
 

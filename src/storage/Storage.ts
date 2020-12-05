@@ -1,4 +1,4 @@
-import Asset from '../tracking/Asset';
+import {Asset} from '../tracking/Asset';
 enum StorageType {
   LocalStorage = 1
 };
@@ -45,11 +45,21 @@ abstract class Storage {
     return children;
   }
 
+  /* Gets the annotation associated with the asset, or an empty string*/
+  getAnnotation(assetName: string): string {
+    return this.getAnnotationInternal(assetName) ?? '';
+  }
+  setAnnotation(assetName: string, freeformText: string) {
+      return this.setAnnotationInternal(assetName, freeformText);
+  }
+
   abstract setUp(storageOptions: StorageOptions): void;
 
   abstract getAssetInternal(assetName: string): string|null;
   abstract writeAssetInternal(assetName: string, asset: string): void;
   abstract getAllAssetsInternal(): string[];
+  abstract getAnnotationInternal(assetName: string): string|null;
+  abstract setAnnotationInternal(assetName: string, freeformText: string): void;
 }
 
 export {StorageType, Storage};

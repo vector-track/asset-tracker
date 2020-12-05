@@ -1,6 +1,6 @@
 import React from 'react';
 import {Storage} from '../storage/Storage';
-import Asset from '../tracking/Asset';
+import {Asset} from '../tracking/Asset';
 
 type CreateAssetFormProps  = {
   storage?: Storage;
