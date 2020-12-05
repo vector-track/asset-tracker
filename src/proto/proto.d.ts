@@ -7,6 +7,9 @@ export interface IAssetProto {
 
     /** AssetProto children */
     children?: (string[]|null);
+
+    /** AssetProto parent */
+    parent?: (string|null);
 }
 
 /** Represents an AssetProto. */
@@ -23,6 +26,9 @@ export class AssetProto implements IAssetProto {
 
     /** AssetProto children. */
     public children: string[];
+
+    /** AssetProto parent. */
+    public parent: string;
 
     /**
      * Creates a new AssetProto instance using the specified properties.

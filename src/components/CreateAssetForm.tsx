@@ -5,6 +5,7 @@ import Asset from '../tracking/Asset';
 type CreateAssetFormProps  = {
   storage?: Storage;
   syncState?: (this: void) => void;
+  parent?: Asset;
 };
 
 type CreateAssetFormState = {
@@ -27,7 +28,11 @@ class CreateAssetForm extends React.Component<CreateAssetFormProps, CreateAssetF
   handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (this.props.storage) {
-      this.props.storage.writeAsset(Asset.createWithName(this.state.assetName));
+      if (!this.props.parent) {
+        this.props.storage.writeAsset(Asset.createWithName(this.state.assetName));
+      } else {
+        this.props.storage.createChild(this.props.parent, Asset.createWithName(this.state.assetName));
+      }
       if (this.props.syncState) {
         this.props.syncState();
       }

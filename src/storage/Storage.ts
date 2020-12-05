@@ -24,7 +24,25 @@ abstract class Storage {
     return Asset.fromSerial(assetStore);
   }
   writeAsset(asset: Asset) {
-    return this.writeAssetInternal(asset.name(), asset.toSerial());
+    return this.writeAssetInternal(asset.name, asset.toSerial());
+  }
+
+  createChild(parent: Asset, child: Asset) {
+    if (!parent.maybeAddChild(child)) return
+    this.writeAsset(parent);
+    this.writeAsset(child);
+  }
+
+  getChildren(parent: Asset): Asset[] {
+    // Do something smarter if this scales.
+    const children: Asset[] = [];
+    for (const child of parent.children) {
+      const asset = this.getAssetInternal(child);
+      if (asset) {
+        children.push(Asset.fromSerial(asset));
+      }
+    }
+    return children;
   }
 
   abstract setUp(storageOptions: StorageOptions): void;

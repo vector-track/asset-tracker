@@ -3,4 +3,5 @@ syntax = "proto3";
 message AssetProto {
   string name = 1;
   repeated string children = 2;
+  string parent = 3;
 }

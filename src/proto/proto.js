@@ -17,6 +17,7 @@ $root.AssetProto = (function() {
      * @interface IAssetProto
      * @property {string|null} [name] AssetProto name
      * @property {Array.<string>|null} [children] AssetProto children
+     * @property {string|null} [parent] AssetProto parent
      */
 
     /**
@@ -52,6 +53,14 @@ $root.AssetProto = (function() {
     AssetProto.prototype.children = $util.emptyArray;
 
     /**
+     * AssetProto parent.
+     * @member {string} parent
+     * @memberof AssetProto
+     * @instance
+     */
+    AssetProto.prototype.parent = "";
+
+    /**
      * Creates a new AssetProto instance using the specified properties.
      * @function create
      * @memberof AssetProto
@@ -80,6 +89,8 @@ $root.AssetProto = (function() {
         if (message.children != null && message.children.length)
             for (var i = 0; i < message.children.length; ++i)
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.children[i]);
+        if (message.parent != null && Object.hasOwnProperty.call(message, "parent"))
+            writer.uint32(/* id 3, wireType 2 =*/26).string(message.parent);
         return writer;
     };
 
@@ -121,6 +132,9 @@ $root.AssetProto = (function() {
                 if (!(message.children && message.children.length))
                     message.children = [];
                 message.children.push(reader.string());
+                break;
+            case 3:
+                message.parent = reader.string();
                 break;
             default:
                 reader.skipType(tag & 7);
@@ -167,6 +181,9 @@ $root.AssetProto = (function() {
                 if (!$util.isString(message.children[i]))
                     return "children: string[] expected";
         }
+        if (message.parent != null && message.hasOwnProperty("parent"))
+            if (!$util.isString(message.parent))
+                return "parent: string expected";
         return null;
     };
 
@@ -191,6 +208,8 @@ $root.AssetProto = (function() {
             for (var i = 0; i < object.children.length; ++i)
                 message.children[i] = String(object.children[i]);
         }
+        if (object.parent != null)
+            message.parent = String(object.parent);
         return message;
     };
 
@@ -209,8 +228,10 @@ $root.AssetProto = (function() {
         var object = {};
         if (options.arrays || options.defaults)
             object.children = [];
-        if (options.defaults)
+        if (options.defaults) {
             object.name = "";
+            object.parent = "";
+        }
         if (message.name != null && message.hasOwnProperty("name"))
             object.name = message.name;
         if (message.children && message.children.length) {
@@ -218,6 +239,8 @@ $root.AssetProto = (function() {
             for (var j = 0; j < message.children.length; ++j)
                 object.children[j] = message.children[j];
         }
+        if (message.parent != null && message.hasOwnProperty("parent"))
+            object.parent = message.parent;
         return object;
     };
 

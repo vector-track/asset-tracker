@@ -18,7 +18,21 @@ function str2ab(str: string): Uint8Array  {
 }
 
 class Asset {
-  name(): string { return this.assetStore.name; }
+  get name(): string { return this.assetStore.name; }
+  get children(): string[] { return this.assetStore.children; }
+
+  get parent(): string { return this.assetStore.parent; }
+  set parent(name: string) {
+    this.assetStore.parent = name;
+  }
+
+  /* Returns a boolean indicating whether or not the child has been added. */
+  maybeAddChild(child: Asset) : boolean {
+    if (this.assetStore.children.includes(child.name)) return false;
+    this.assetStore.children.push(child.name);
+    child.parent = this.name;
+    return true;
+  }
 
   static createWithName(name: string): Asset {
       const assetProto = new AssetProto();

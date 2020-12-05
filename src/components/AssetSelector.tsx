@@ -22,7 +22,7 @@ class AssetSelector extends React.Component<AssetSelectorProps, AssetSelectorSta
         {
           this.props.assets.map((asset: Asset, key) => {
             return (<div key={key} onClick={() => this.props.onSelection && this.props.onSelection(asset)}>
-                      <h1>{asset.name()}</h1>
+                      <h1>{asset.name}</h1>
                     </div>)
           })
         }
