@@ -7,9 +7,14 @@ import AssetSelector from './AssetSelector';
 import {Asset} from '../tracking/Asset';
 import EditAnnotationForm from './EditAnnotationForm';
 
+import HomeIcon from '@material-ui/icons/Home';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import {Tooltip, IconButton} from '@material-ui/core';
+
 enum AssetView {
-  New = 1,
-  Existing
+  Global = 1,
+  Existing,
+  Create
 };
 
 type AssetTrackerProps  = {
@@ -44,31 +49,51 @@ class AssetTracker extends React.Component<AssetTrackerProps, AssetTrackerState>
 
   render() {
     return (
-      <React.Fragment>
+      <div className="AssetTracker">
         {this.renderHead()}
         <div className="AssetTracker-body">
             {this.renderBody()}
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 
   renderHead() {
     return (<div className="AssetTracker-navbar">
-      <div onClick={() => this.toggleAssetView(AssetView.Existing)}>
-        {this.hasCurrentAsset() ?
-          (<h1>Current Asset: {this.state.currentAsset!.name}</h1>)
-          : <h1>No Asset Selected</h1>}
+      <div className="AssetTracker-navbar-asset">
+          {this.hasCurrentAsset() ?
+          (<React.Fragment>
+              {this.state.currentAsset!.hasParent() &&
+                <React.Fragment>
+                  <span onClick={() => this.setCurrentAssetByName(this.state.currentAsset!.parent)}>
+                    {this.state.currentAsset!.parent}
+                  </span> 
+                  &gt;
+                </React.Fragment>}
+              <strong onClick={() => this.toggleAssetView(AssetView.Existing)}>
+                {this.state.currentAsset!.name}
+              </strong>
+          </React.Fragment>)
+            : <React.Fragment>No Asset Selected</React.Fragment>}
       </div>
-      { this.state.assetView !== AssetView.New && this.hasCurrentAsset()
-        && <h2 className="AssetTracker-navbar-all" onClick={() => this.toggleAssetView(AssetView.New)}>
-              All Assets
-           </h2>}
+      <div className="AssetTracker-navbar-buttons">
+        <Tooltip title="Home" className="AssetTracker-navbar-all">
+          <IconButton aria-label="home" onClick={() => this.toggleAssetView(AssetView.Global)}>
+            <HomeIcon fontSize="inherit"/>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Create" className="AssetTracker-navbar-all" onClick={() => this.toggleAssetView(AssetView.Create)}>
+          <IconButton aria-label="create">
+            <AddBoxIcon fontSize="inherit"/>
+          </IconButton>
+        </Tooltip>
+      </div>
     </div>)
   }
+
   renderBody() {
     switch (this.state.assetView) {
-      case (AssetView.New):
+      case (AssetView.Global):
         return this.renderNoAsset();
       case (AssetView.Existing): {
         if (this.hasCurrentAsset()) {
@@ -77,12 +102,15 @@ class AssetTracker extends React.Component<AssetTrackerProps, AssetTrackerState>
           return this.renderNoAsset();
         }
       }
+      case (AssetView.Create): {
+        return this.renderCreateAsset();
+      }
     }
   }
 
   async syncState(nextView: AssetView) {
     switch (nextView) {
-      case (AssetView.New): {
+      case (AssetView.Global): {
         const assets = this.state.storage.getAllAssets();
         return this.setState({
           assets: assets,
@@ -96,8 +124,20 @@ class AssetTracker extends React.Component<AssetTrackerProps, AssetTrackerState>
             this.setCurrentAsset(asset);
           }
         }
+        return;
+      }
+      case AssetView.Create: {
+        return this.setState({
+          assetView: nextView
+        });
       }
     }
+  }
+
+  setCurrentAssetByName(assetName: string) {
+    const asset = this.state.storage.getAsset(assetName);
+    if (!asset) return;
+    this.setCurrentAsset(asset!);
   }
 
   setCurrentAsset(asset: Asset) {
@@ -117,12 +157,19 @@ class AssetTracker extends React.Component<AssetTrackerProps, AssetTrackerState>
 
   renderCurrentAsset(currentAsset: Asset) {
     return (
-      <React.Fragment>
-        <EditAnnotationForm storage={this.state.storage} parent={this.state.currentAsset} annotation={this.state.annotation} />
-        <h2>Children: </h2>
-        <AssetSelector assets={this.state.children ?? []} onSelection={this.setCurrentAsset}/>
-        <CreateAssetForm storage={this.state.storage} parent={this.state.currentAsset} syncState={() => this.syncState(AssetView.Existing)} />
-      </React.Fragment>
+      <div className="AssetTracker-current">
+        <div className="AssetTracker-current-annotation">
+          <EditAnnotationForm storage={this.state.storage}
+                              parent={this.state.currentAsset}
+                              annotation={this.state.annotation} />
+        </div>
+        <div className="AssetTracker-current-metadata">
+          <div className="AssetTracker-current-metadata-children">
+            <h2>Children: </h2>
+            <AssetSelector assets={this.state.children ?? []} onSelection={this.setCurrentAsset}/>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -130,7 +177,16 @@ class AssetTracker extends React.Component<AssetTrackerProps, AssetTrackerState>
     return (
       <React.Fragment>
         <AssetSelector assets={this.state.assets} onSelection={this.setCurrentAsset}/>
-        <CreateAssetForm storage={this.state.storage} parent={this.state.currentAsset} syncState={() => this.syncState(AssetView.New)} />
+      </React.Fragment>
+    );
+  }
+
+  renderCreateAsset() {
+    return (
+      <React.Fragment>
+        {this.hasCurrentAsset() && <h1>Create Child Asset Of:  {this.state.currentAsset!.name}</h1>}
+        <CreateAssetForm storage={this.state.storage} parent={this.state.currentAsset} syncState={() => this.syncState(
+          this.hasCurrentAsset() ? AssetView.Existing : AssetView.Global)} />
       </React.Fragment>
     );
   }

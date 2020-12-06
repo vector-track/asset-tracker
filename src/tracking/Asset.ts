@@ -24,6 +24,7 @@ class Asset {
   get name(): string { return this.assetStore.name; }
   get children(): string[] { return this.assetStore.children; }
 
+  hasParent(): boolean { return this.assetStore.parent !== "" }
   get parent(): string { return this.assetStore.parent; }
   set parent(name: string) {
     this.assetStore.parent = name;

@@ -16,9 +16,7 @@ class AssetSelector extends React.Component<AssetSelectorProps, AssetSelectorSta
       <React.Fragment>
         {
           this.props.assets.map((asset: Asset, key) => {
-            return (<div key={key} onClick={() => this.props.onSelection && this.props.onSelection(asset)}>
-                      <h1>{asset.name}</h1>
-                    </div>)
+            return (<h1 key={key} onClick={() => this.props.onSelection && this.props.onSelection(asset)}>{asset.name}</h1>)
           })
         }
       </React.Fragment>

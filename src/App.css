@@ -1,16 +1,48 @@
+#root {
+  height: 100vh;
+}
+
+.AssetTracker {
+  display: flex;
+  flex-direction:column;
+  height: 100%;
+}
+
 .AssetTracker-body {
   text-align: center;
+  flex-grow: 1;
 }
 
 .AssetTracker-navbar {
   display: flex;
-  margin-left: 5%;
-  font-size: 10px;
-  top: 0;
+  justify-content:flex-end;
+  font-size: 20px;
 }
 
-.AssetTracker-navbar-all {
-  /* Hack to fix last element to the right. */
-  margin-left: auto;
-  margin-right: 5px;
+.AssetTracker-navbar-asset {
+  position: absolute;
+  left:5%;
+  padding-top: 10px;
+}
+
+.AssetTracker-current {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+}
+
+.AssetTracker-current-metadata-children  {
+  height: 80%;
+  overflow: scroll;
+  font-size: 8px
+}
+
+.AssetTracker-current-annotation form {
+    height: 90%;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.AssetTracker-current-annotation textarea {
+  height: 90%;
 }
