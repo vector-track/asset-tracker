@@ -9,6 +9,8 @@ import EditAnnotationForm from './EditAnnotationForm';
 
 import HomeIcon from '@material-ui/icons/Home';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
+
 import {Tooltip, IconButton} from '@material-ui/core';
 
 enum AssetView {
@@ -67,8 +69,8 @@ class AssetTracker extends React.Component<AssetTrackerProps, AssetTrackerState>
                 <React.Fragment>
                   <span onClick={() => this.setCurrentAssetByName(this.state.currentAsset!.parent)}>
                     {this.state.currentAsset!.parent}
-                  </span> 
-                  &gt;
+                  </span>
+                  &nbsp;&gt;&nbsp;
                 </React.Fragment>}
               <strong onClick={() => this.toggleAssetView(AssetView.Existing)}>
                 {this.state.currentAsset!.name}
@@ -77,14 +79,14 @@ class AssetTracker extends React.Component<AssetTrackerProps, AssetTrackerState>
             : <React.Fragment>No Asset Selected</React.Fragment>}
       </div>
       <div className="AssetTracker-navbar-buttons">
-        <Tooltip title="Home" className="AssetTracker-navbar-all">
-          <IconButton aria-label="home" onClick={() => this.toggleAssetView(AssetView.Global)}>
-            <HomeIcon fontSize="inherit"/>
-          </IconButton>
-        </Tooltip>
         <Tooltip title="Create" className="AssetTracker-navbar-all" onClick={() => this.toggleAssetView(AssetView.Create)}>
           <IconButton aria-label="create">
             <AddBoxIcon fontSize="inherit"/>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Home" className="AssetTracker-navbar-all">
+          <IconButton aria-label="home" onClick={() => this.toggleAssetView(AssetView.Global)}>
+            <HomeIcon fontSize="inherit"/>
           </IconButton>
         </Tooltip>
       </div>

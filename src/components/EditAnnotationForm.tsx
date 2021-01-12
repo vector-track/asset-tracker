@@ -2,6 +2,8 @@ import React from 'react';
 import {Storage} from '../storage/Storage';
 import {Asset} from '../tracking/Asset';
 
+import TextField from '@material-ui/core/TextField';
+
 type EditAnnotationFormProps  = {
   storage?: Storage;
   annotation?: string;
@@ -32,7 +34,7 @@ class EditAnnotationForm extends React.Component<EditAnnotationFormProps, EditAn
     }
   }
 
-  handleNameChange(event: React.FormEvent<HTMLTextAreaElement>) {
+  handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({annotation: event.currentTarget.value});
   }
 
@@ -46,7 +48,14 @@ class EditAnnotationForm extends React.Component<EditAnnotationFormProps, EditAn
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <textarea value={this.state.annotation} onChange={this.handleNameChange} />
+        <TextField
+          id="standard-textarea"
+          label="Annotations"
+          value={this.state.annotation}
+          onChange={this.handleNameChange}
+          multiline
+          rows={10}
+        />
         <br/>
         <input type="submit" value="Submit" />
       </form>
